@@ -213,6 +213,41 @@ def create_files(path: str) -> None:
     save_credentials(worksheet)
     logger.info("Files created")
 
+def configure_logging():
+    """
+    Configures the logging level
+    :return:
+    """
+    global verbose, quiet
+    if verbose and not quiet:
+        logger.setLevel(logging.DEBUG)
+        logger.debug("Verbose mode activated")
+    elif not verbose and quiet:
+        logger.setLevel(logging.ERROR)
+        logger.error("Quiet mode activated")
+    else:
+        logger.setLevel(logging.INFO)
+
+def main():
+    global verbose, quiet
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename", type=str, help="filename")
+    parser.add_argument("-v", "--verbose", action="store_true", help="activates verbose mode")
+    parser.add_argument("-q", "--quiet", action="store_true", help="activates quite mode")
+    args = parser.parse_args()
+    print(args.filename)
+    path = args.filename
+
+    verbose = args.verbose
+    quiet = args.quiet
+    configure_logging()
+    try:
+        create_files("Klassenraeume_2023.xlsx")
+    except FileNotFoundError:
+        logger.error("File not found")
+
+if __name__ == "__main__":
+    main()
 
 
 
