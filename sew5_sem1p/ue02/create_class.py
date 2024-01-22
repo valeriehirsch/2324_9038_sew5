@@ -242,7 +242,7 @@ def main():
     quiet = args.quiet
     configure_logging()
     try:
-        create_files("Klassenraeume_2023.xlsx")
+        create_files(path)
     except FileNotFoundError:
         logger.error("File not found")
 

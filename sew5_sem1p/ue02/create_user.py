@@ -37,10 +37,10 @@ def read_file(path: str) -> Generator:
     """
     wb = load_workbook(path, read_only=True)
     ws = wb[wb.sheetnames[0]]
-    for row in ws.iter_rows(min_row=2):
+    for row in ws.iter_rows(min_row=3):
         if all(cell.value is None for cell in row):
             continue
-        yield [row[0].value, row[1].value, row[2].value]
+        yield [row[0].value, row[1].value, row[2].value,row[3].value]
 
 def replace_umlaut(s: str) -> str:
     """
@@ -131,7 +131,7 @@ def create_user(file, pwd: str, first_name: str, last_name: str, group: str, cla
         f"-m -g {last_name} -G {group},{class_name} "
         f"-s /bin/bash {first_name}_{last_name}"
     )
-    command4 = f"echo {first_name}_{last_name}:{escape_quote(pwd)} | chpasswd"
+    command4 = f"echo {first_name}_{last_name}:{escape(pwd)} | chpasswd"
 
     print(command1, file=file)
     print(command2, file=file)
@@ -166,7 +166,7 @@ def generate_password(length: int) -> str:
 
 
 def create_credentials() -> Tuple[openpyxl.workbook.workbook.Workbook, openpyxl.worksheet.worksheet.Worksheet]:
-   """
+    """
     Excel wird erstellt um cred zu speichern
     :return:
     """
@@ -178,6 +178,7 @@ def create_credentials() -> Tuple[openpyxl.workbook.workbook.Workbook, openpyxl.
     sheet["B1"] = "Lastname"
     sheet["C1"] = "Password"
     return workbook, sheet
+
 
 def add_credentials(sheet, row: int, pwd: str, first_name: str, last_name: str) -> None:
     """
@@ -237,13 +238,13 @@ def create_files(path: str) -> None:
     logger.info("Starting file creation")
     worksheet, sheet = create_credentials()
     row = 2
-    with open("create_user.sh", "w", encoding="UTF-8") as create_user_file, open("delete_user.sh", "w",
-                                                                                 encoding="UTF-8") as delete_user_file:
+    with open("create_user.sh", "w", encoding="UTF-8") as create_user_file, open("delete_user.sh", "w",encoding="UTF-8") as delete_user_file:
         print("set -e", file=create_user_file)
         print("set -e", file=delete_user_file)
         print("mkdir /home", file=create_user_file)
 
         for i in read_file(path):
+            print(i)
             first_name = check_name(str(i[0]).lower())
             last_name = generate_unique_name(check_name(str(i[1]).lower()))
             group = str(i[2]).lower()
@@ -285,7 +286,7 @@ def main():
     quiet = args.quiet
     configure_logging()
     try:
-        create_files("Klassenraeume_2023.xlsx")
+        create_files(path)
     except FileNotFoundError:
         logger.error("File not found")
 
