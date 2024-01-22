@@ -4,7 +4,7 @@ import time
 
 class LabyrinthSolver:
     """
-    >>> solver = LabyrinthSolver("l2.txt", 5, 5, False, 0, 0)
+    >>> solver = LabyrinthSolver("l2.txt", 5, 5, False, 0)
     >>> solver.solve_labyrinth()
     nbr of solutions: 486
     """
@@ -86,6 +86,21 @@ class LabyrinthSolver:
         for i in solution:
             s += str(i) + '\n'
         print(s)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Calculate number of ways through a labyrinth")
+    parser.add_argument("filename", help="file containing the labyrinth to solve")
+    parser.add_argument("-x", "--xstart", type=int, default=5, help="x-coordinate to start")
+    parser.add_argument("-y", "--ystart", type=int, default=5, help="y-coordinate to start")
+    parser.add_argument("-p", "--print", action="store_true", help="print output of every solution")
+    parser.add_argument("-t", "--time", action="store_true", help="print total calculation time (in milliseconds)")
+    parser.add_argument("-d", "--delay", type=int, default=0, help="delay after printing a solution (in milliseconds)")
+
+    args = parser.parse_args()
+
+    solver = LabyrinthSolver(args.filename, args.xstart, args.ystart, args.print, args.time, args.delay)
+    solver.solve_labyrinth()
 
 
 
