@@ -22,3 +22,10 @@ class LabyrinthSolver:
         self.delay = delay
         self.solutions = set()
 
+    def load_labyrinth(self, filename):
+        """ reads the labyrinth from the file"""
+        with open(filename, 'r') as file:
+            labyrinth = [line.strip() for line in file]
+        return labyrinth
+
+   
