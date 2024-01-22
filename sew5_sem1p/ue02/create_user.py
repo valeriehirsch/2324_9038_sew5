@@ -1,5 +1,6 @@
 import argparse
 import random
+import string
 import sys
 from typing import Generator, List, Tuple
 
@@ -105,7 +106,7 @@ def escape(s: str) -> str:
     """
     return s.replace('"', '\\"').replace("'", "\\'").replace("`", "\\`")
 
-def create_user(i: List[str], file, pwd: str) -> None:
+def create_user(file, pwd: str, first_name: str, last_name: str, group: str, class_name: str) -> None:
     """
     Erstellt Befehle die user erstellen
     :param i:
@@ -113,42 +114,43 @@ def create_user(i: List[str], file, pwd: str) -> None:
     :param pwd:
     :return:
     """
-    logger.info(f"Creating user: {i[0]}")
+    logger.info(f"Creating user: {first_name}_{last_name}")
     if verbose:
-        print(f"echo creating user: {i[0]}", file=file)
+        print(f"echo creating user: {first_name}_{last_name}", file=file)
+
     command1 = (
-        f"getent passwd k{replace_umlaut(str(i[0]).lower())} > /dev/null && echo 'User " 
-        f"{replace_umlaut(str(i[0]).lower())} already exists. Aborting.' && exit 1 || true"
+        f"getent passwd {first_name}_{last_name} > /dev/null && "
+        f"echo 'User {first_name}_{last_name} already exists. Aborting.' && "
+        f"exit 1 || true"
     )
-    command2 = f"groupadd {replace_umlaut(str(i[0]).lower())}"
+
+    command2 = f"groupadd {last_name}"
 
     command3 = (
-        f"useradd -d /home/klassen/{replace_umlaut(str(i[0]).lower())} "
-        f"-c k{replace_umlaut(str(i[0]).lower())} "
-        f"-m -g {replace_umlaut(str(i[0]).lower())} "
-        f"-G cdrom,plugdev,sambashare -s /bin/bash k{replace_umlaut(str(i[0]).lower())}"
+        f"useradd -d /home/{last_name} -c {last_name} "
+        f"-m -g {last_name} -G {group},{class_name} "
+        f"-s /bin/bash {first_name}_{last_name}"
     )
-
-    command4 = f"echo {replace_umlaut(str(i[0]).lower())}:{escape(pwd)} | chpasswd"
+    command4 = f"echo {first_name}_{last_name}:{escape_quote(pwd)} | chpasswd"
 
     print(command1, file=file)
     print(command2, file=file)
     print(command3, file=file)
     print(command4, file=file)
 
-def delete_user(i: List[str], file) -> None:
+def delete_user(file, first_name: str, last_name: str) -> None:
     """
     Schreibt Befehle um user zu löschen
     :param i:
     :param file:
     :return:
     """
-    logger.info(f"Deleting user: {i[0]}")
-    if verbose: print(f"echo deleting user: {i[0]}", file=file)
-    command = "userdel -r k" + replace_umlaut(str(i[0]).lower())
+    logger.info(f"Deleting user: {first_name}_{last_name}")
+    if verbose: print(f"echo deleting user: {first_name}_{last_name}", file=file)
+    command = f"userdel -r {first_name}_{last_name}"
     print(command, file=file)
 
-def generate_password(class_name: str, room: str, kv: str) -> str:
+def generate_password(length: int) -> str:
     """
     generiert pwd
     :param class_name:
@@ -157,15 +159,14 @@ def generate_password(class_name: str, room: str, kv: str) -> str:
     :return:
     """
     logger.info("Generating password")
-    chars = "1%&(),._-=^#"
-    random_chars = [random.choice(chars) for _ in range(3)]
-    password = f"{class_name}{random_chars[0]}{room}{random_chars[1]}{kv}{random_chars[2]}"
+    characters = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(random.choice(characters) for i in range(length))
     return password
 
 
 
 def create_credentials() -> Tuple[openpyxl.workbook.workbook.Workbook, openpyxl.worksheet.worksheet.Worksheet]:
-    """
+   """
     Excel wird erstellt um cred zu speichern
     :return:
     """
@@ -173,22 +174,24 @@ def create_credentials() -> Tuple[openpyxl.workbook.workbook.Workbook, openpyxl.
     workbook = openpyxl.Workbook()
     sheet = workbook.active
 
-    sheet["A1"] = "Username"
-    sheet["B1"] = "Password"
+    sheet["A1"] = "Firstname"
+    sheet["B1"] = "Lastname"
+    sheet["C1"] = "Password"
     return workbook, sheet
 
-def add_credentials(sheet: openpyxl.worksheet.worksheet.Worksheet, name: str, row: int, pwd: str) -> None:
+def add_credentials(sheet, row: int, pwd: str, first_name: str, last_name: str) -> None:
     """
     Credentials werden in Excel geschrieben
     :param sheet:
-    :param i:
     :param row:
     :param pwd:
+    :param first_name:
+    :param last_name:
     :return:
     """
-    logger.info(f"Adding credentials for user: {name}")
-    sheet[f"A{row}"] = name
-    sheet[f"B{row}"] = pwd
+    sheet[f"A{row}"] = first_name
+    sheet[f"B{row}"] = last_name
+    sheet[f"C{row}"] = pwd
 
 def save_credentials(workbook: openpyxl.workbook.workbook.Workbook) -> None:
     """
@@ -233,24 +236,22 @@ def create_files(path: str) -> None:
     """
     logger.info("Starting file creation")
     worksheet, sheet = create_credentials()
-    row = 4
-    with open("create_user.sh", "w") as create_user_file, open("delete_user.sh", "w") as delete_user_file:
+    row = 2
+    with open("create_user.sh", "w", encoding="UTF-8") as create_user_file, open("delete_user.sh", "w",
+                                                                                 encoding="UTF-8") as delete_user_file:
         print("set -e", file=create_user_file)
         print("set -e", file=delete_user_file)
-        print("mkdir /home/klassen", file=create_user_file)
-
-        create_user_by_name("lehrer", create_user_file, delete_user_file)
-        add_credentials(sheet, "lehrer", 2, "lehrer")
-        create_user_by_name("seminar", create_user_file, delete_user_file)
-        add_credentials(sheet, "seminar", 3, "seminar")
+        print("mkdir /home", file=create_user_file)
 
         for i in read_file(path):
-            if i[0] == None:
-                continue
-            pwd = generate_password(str(i[0]).lower(), str(i[1]).lower(), str(i[2]).lower())
-            create_user(i, create_user_file, pwd)
-            delete_user(i, delete_user_file)
-            add_credentials(sheet, i[0], row, pwd)
+            first_name = check_name(str(i[0]).lower())
+            last_name = generate_unique_name(check_name(str(i[1]).lower()))
+            group = str(i[2]).lower()
+            class_name = str(i[3])
+            pwd = generate_password(12)
+            create_user(create_user_file, pwd, first_name, last_name, group, class_name)
+            delete_user(delete_user_file, first_name, last_name)
+            add_credentials(sheet, row, pwd, str(i[0]), str(i[1]))
             row += 1
     save_credentials(worksheet)
     logger.info("Files created")
