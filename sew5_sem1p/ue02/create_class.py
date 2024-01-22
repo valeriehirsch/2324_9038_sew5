@@ -94,6 +94,17 @@ def create_user(i: List[str], file, pwd: str) -> None:
     print(command3, file=file)
     print(command4, file=file)
 
+def delete_user(i: List[str], file) -> None:
+    """
+    Writes commands to delete a user into file
+    :param i:
+    :param file:
+    :return:
+    """
+    logger.info(f"Deleting user: {i[0]}")
+    if verbose: print(f"echo deleting user: {i[0]}", file=file)
+    command = "userdel -r k" + replace_umlaut(str(i[0]).lower())
+    print(command, file=file)
 
 def generate_password(class_name: str, room: str, kv: str) -> str:
     """
@@ -109,6 +120,20 @@ def generate_password(class_name: str, room: str, kv: str) -> str:
     password = f"{class_name}{random_chars[0]}{room}{random_chars[1]}{kv}{random_chars[2]}"
     return password
 
+
+
+def create_credentials() -> Tuple[openpyxl.workbook.workbook.Workbook, openpyxl.worksheet.worksheet.Worksheet]:
+    """
+    Creates an excel sheet for storing credentials
+    :return:
+    """
+    logger.info("Creating credentials sheet")
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+
+    sheet["A1"] = "Username"
+    sheet["B1"] = "Password"
+    return workbook, sheet
 def add_credentials(sheet: openpyxl.worksheet.worksheet.Worksheet, name: str, row: int, pwd: str) -> None:
     """
     Adds credentials to the excel sheet
