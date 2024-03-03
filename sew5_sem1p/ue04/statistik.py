@@ -70,8 +70,8 @@ def main(args: argparse.Namespace) -> None:
         plt.xticks(range(0, 25, 4))
 
         plt.xlabel('Time in hours')
-        plt.title(f'Valerie Hirsch: {nbrOfCommits} commits')
-        plt.grid(True, which="major", axis="y", linestyle="-", linewidth=1.5, color='black')
+        plt.title(f'Valerie Hirsch - {nbrOfCommits} commits')
+        plt.grid(True, which="major", axis="both", linestyle="-", linewidth=1.5, color='black')
         logger.debug("Data set")
         plt.savefig("Statistik_Hirsch.png", dpi=72)
         logger.info("Finished")
