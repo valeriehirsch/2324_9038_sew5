@@ -73,7 +73,7 @@ def main(args: argparse.Namespace) -> None:
         plt.title(f'Valerie Hirsch: {nbrOfCommits} commits')
         plt.grid(True, which="major", axis="y", linestyle="-", linewidth=1.5, color='black')
         logger.debug("Data set")
-        plt.savefig("statistic_new.png", dpi=72)
+        plt.savefig("Statistik_Hirsch.png", dpi=72)
         logger.info("Finished")
         plt.show()
 
