@@ -54,8 +54,8 @@ def main(args: argparse.Namespace) -> None:
 
         logger.debug("Sorted Data")
 
-        min_size = 50
-        additional_size = 25
+        min_size = 100
+        additional_size = 250
 
         data = {"x": [], "y": [], "sizes": []}
         for day, time in grouped_data:
