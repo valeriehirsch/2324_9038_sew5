@@ -53,4 +53,9 @@ public class Node implements Comparable<Node> {
 
     }
 
+    public void addEdge(Edge edgeToAdd){
+        edges.add(edgeToAdd);
+    }
+
+
 }
