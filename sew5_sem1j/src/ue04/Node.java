@@ -10,6 +10,10 @@ public class Node implements Comparable<Node> {
      Node previous;
      boolean isVisited;
 
+    /***
+     * Konstruktor
+     * @param id Name von Node
+     */
     public Node(String id) {
         this.id = id;
         edges = new TreeSet<>(Comparator.comparingInt((Edge e) -> e.neighbor.distance).thenComparing(e -> e.neighbor.id));
@@ -18,6 +22,11 @@ public class Node implements Comparable<Node> {
         isVisited = false;
     }
 
+    /***
+     *  Comparable
+     * @param o the object to be compared.
+     * @return wer die kleine distance hat
+     */
     @Override
     public int compareTo(Node o) {
         return Integer.compare(distance, o.distance);
