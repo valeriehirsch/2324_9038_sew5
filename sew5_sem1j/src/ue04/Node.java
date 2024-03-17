@@ -4,11 +4,11 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 public class Node implements Comparable<Node> {
-    private String id;
-    private TreeSet<Edge> edges;
-    private int distance;
-    private Node previous;
-    private boolean isVisited;
+     String id;
+     TreeSet<Edge> edges;
+     int distance;
+     Node previous;
+     boolean isVisited;
 
     public Node(String id) {
         this.id = id;

@@ -14,7 +14,7 @@ public class Graph {
      * Konstruktor
      */
     public Graph() {
-        pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.distance).thenComparing(n -> n.Id));
+        pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.distance).thenComparing(n -> n.id));
         nodes = new ArrayList<>();
     }
 
