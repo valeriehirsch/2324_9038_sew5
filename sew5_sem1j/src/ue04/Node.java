@@ -31,4 +31,26 @@ public class Node implements Comparable<Node> {
     public int compareTo(Node o) {
         return Integer.compare(distance, o.distance);
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "id='" + id + '\'' +
+                ", edges=" + edges +
+                ", distance=" + distance +
+                ", previous=" + previous +
+                ", isVisited=" + isVisited +
+                '}';
+    }
+
+    public String getPath(){
+        if (distance == Integer.MAX_VALUE){
+            return "no path available for " + id;
+        }
+        else {
+            return previous.id + " (" + previous.distance + ") ";
+        }
+
+    }
+
 }
