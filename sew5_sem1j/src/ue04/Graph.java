@@ -5,10 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Graph {
 
@@ -26,12 +23,20 @@ public class Graph {
     public void readGraphFromAdjacencyMatrixFile (Path file) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(file.toFile()))){
             String line;
-            int row = 0;
+            int row = -1;
+            List<String> letters = new ArrayList<>();
             while ((line = br.readLine()) != null ){
+                if (row == -1){
+                    letters = new ArrayList<>(Arrays.asList(line.split(";")));
+                    continue;
+                }
                 String[] values = line.split(";");
+                Node n = new Node(letters.get(row));
+
                 for (int i = 0; i < values.length; i++) {
                     int dist = Integer.parseInt(values[i]);
                     if (dist != 0){
+
                         //hier dann nodes und edge adden -> dafür fehlen methoden bei node
                     }
                 }
