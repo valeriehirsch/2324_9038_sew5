@@ -9,17 +9,25 @@ import java.util.*;
 
 public class Graph {
 
-    private PriorityQueue<Node> pq;
-    private List<Node> nodes;
+    private PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.getDistance()).thenComparing(n -> n.getId()));;
+    private List<Node> nodes = new ArrayList<>();
 
     /**
      * Konstruktor
      */
-    public Graph() {
-        pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.getDistance()).thenComparing(n -> n.getId()));
-        nodes = new ArrayList<>();
+    public Graph(Path p) {
+        try {
+            readGraphFromAdjacencyMatrixFile(p);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    /***
+     * lies Grafik ein
+     * @param file
+     * @throws IOException
+     */
     public void readGraphFromAdjacencyMatrixFile (Path file) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(file.toFile()))){
             String line;
@@ -46,6 +54,11 @@ public class Graph {
         }
     }
 
+    /***
+     *
+     * @param id name der node
+     * @return entweder vorhande node zurück oder created
+     */
     private Node findOrCreateNode(String id) {
         Optional<Node> node = nodes.stream().filter(a -> Objects.equals(a.getId(), id)).findFirst();
         if (node.isPresent()) return node.get();
@@ -54,6 +67,11 @@ public class Graph {
         return newNode;
     }
 
+    /***
+     *
+     * @param id node name
+     * @return gibt einen node wert zurück
+     */
     private Node findNodeById(String id) {
         for (Node node : nodes) {
             if (node.getId().equals(id)) {
@@ -68,6 +86,11 @@ public class Graph {
      return "";
     }
 
+    /***
+     *
+     * @param n Node für path
+     * @return gibt kompletten pfad des nodes zurück
+     */
     public String getPath(Node n){
         StringBuilder pathBuilder = new StringBuilder();
         for (Node cur = n; cur.previous != null; cur = cur.previous) {
