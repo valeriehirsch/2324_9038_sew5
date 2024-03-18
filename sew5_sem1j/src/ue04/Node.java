@@ -2,13 +2,15 @@ package ue04;
 
 import com.sun.source.tree.Tree;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
 public class Node implements Comparable<Node> {
      private String id;
-     private TreeSet<Edge> edges = new TreeSet<>();
+     private ArrayList<Edge> edges = new ArrayList<>();
      private int distance = Integer.MAX_VALUE;
      private Node previous = null;
      private boolean isVisited = false;
@@ -28,7 +30,7 @@ public class Node implements Comparable<Node> {
      */
     @Override
     public int compareTo(Node o) {
-        return Integer.compare(distance, o.distance);
+        return this.distance == o.distance ? this.id.compareTo(o.id) : Integer.compare(this.distance, o.distance);
     }
 
     @Override

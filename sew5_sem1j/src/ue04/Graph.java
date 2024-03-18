@@ -8,8 +8,36 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class Graph {
+    public static void main(String[] args) throws IOException {
+        Graph g = new Graph(Path.of("src/ue04/resources/Graph_A-H.csv"));
+//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_a.csv"));
+//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_b.csv"));
+//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_c.csv"));
+//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_d.csv"));
+//        Graph g = new Graph(Path.of("resources/Graph_12_with_names.csv"));
+//        Graph g = new Graph(Path.of("resources/unzusammenhaengend_Graph_A-M.csv"));
+        System.out.println(g);
+        System.out.println();
+        System.out.println(g.getAllPaths());
+        System.out.println();
 
-    private PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.getDistance()).thenComparing(n -> n.getId()));;
+        g.calcWithDijkstra("A");
+//      g.calcWithDijkstra("Adonaäis");
+        System.out.println(g);
+        System.out.println();
+        System.out.println(g.getAllPaths());
+        System.out.println();
+
+
+        g.calcWithDijkstra("B");
+//        g.calcWithDijkstra("Barthhal");
+        System.out.println(g);
+        System.out.println();
+        System.out.println(g.getAllPaths());
+        System.out.println();
+    }
+
+    private PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(Node::getDistance));;
     private List<Node> nodes = new ArrayList<>();
 
     /**
@@ -31,16 +59,13 @@ public class Graph {
     public void readGraphFromAdjacencyMatrixFile (Path file) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(file.toFile()))){
             String line;
-            int row = -1;
+            int row = 0;
             List<String> letters = new ArrayList<>();
             while ((line = br.readLine()) != null ){
-                if (row == -1){
-                    letters = new ArrayList<>(Arrays.asList(line.split(";")));
-                    continue;
-                }
                 String[] values = line.split(";");
                 Node n = findOrCreateNode(values[0]);
-                for (int i = 0; i < values.length; i++) {
+                for (int i = 1; i < values.length; i++) {
+                    if (row == 0) continue;
                     if (!values[i].isEmpty()) {
                         int dist = Integer.parseInt(values[i]);
                         n.addEdge(new Edge(dist, findOrCreateNode(values[0])));
@@ -99,6 +124,10 @@ public class Graph {
         return pathBuilder.toString();
     }
 
+    /**
+     * rechnet aus
+     * @param startNodeId anfangspunkt (node)
+     */
     public void calcWithDijkstra (String startNodeId){
 
         for (Node node : nodes) {
@@ -123,6 +152,10 @@ public class Graph {
 
     }
 
+    /**
+     * toString
+     * @return
+     */
     @Override
     public String toString() {
         StringBuilder graphBuilder = new StringBuilder();
