@@ -95,7 +95,7 @@ public class Node implements Comparable<Node> {
     public void setStartNode() {
         distance = 0;
     }
-    public void reset() {
+    public void init() {
         isVisited = false;
         previous = null;
         distance = Integer.MAX_VALUE;
