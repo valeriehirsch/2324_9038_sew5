@@ -93,7 +93,7 @@ public class Graph {
      */
     public String getPath(Node n){
         StringBuilder pathBuilder = new StringBuilder();
-        for (Node cur = n; cur.previous != null; cur = cur.previous) {
+        for (Node cur = n; cur.getPrevious() != null; cur = cur.getPrevious()) {
             pathBuilder.insert(0, "--(" + cur.getDistance() + ")-> " + cur.getId() + " ");
         }
         return pathBuilder.toString();

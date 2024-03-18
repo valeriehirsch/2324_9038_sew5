@@ -5,10 +5,10 @@ import java.util.TreeSet;
 
 public class Node implements Comparable<Node> {
      private String id;
-     TreeSet<Edge> edges;
+     private TreeSet<Edge> edges;
      private int distance;
-     Node previous;
-     boolean isVisited;
+     private Node previous;
+     private boolean isVisited = false;
 
     /***
      * Konstruktor
@@ -49,6 +49,14 @@ public class Node implements Comparable<Node> {
 
     public int getDistance() {
         return distance;
+    }
+
+    public Node getPrevious() {
+        return previous;
+    }
+
+    public boolean isVisited() {
+        return isVisited;
     }
 
     /*
