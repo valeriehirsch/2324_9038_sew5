@@ -123,6 +123,11 @@ public class Graph {
 
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        Node startNode = nodes.stream().filter(Node::isFirst).findFirst().orElse(null);
 
 
+    }
 }

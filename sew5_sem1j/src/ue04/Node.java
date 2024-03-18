@@ -85,6 +85,17 @@ public class Node implements Comparable<Node> {
         edges.add(edgeToAdd);
     }
 
+    public String edgetoString() {
+        StringBuilder resultBuilder = new StringBuilder();
+        for (Edge edge : edges) {
+            resultBuilder.append(edge.getNeighbor().getId())
+                    .append(":")
+                    .append(edge.getDistance())
+                    .append(" ");
+        }
+        return resultBuilder.toString();
+    }
+
     /***
      * checkt ob erster punkt (start node)
      * @return
