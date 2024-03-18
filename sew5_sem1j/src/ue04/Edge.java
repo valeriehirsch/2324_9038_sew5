@@ -22,4 +22,12 @@ public class Edge{
     public Node getNeighbor() {
         return neighbor;
     }
+
+    @Override
+    public String toString() {
+        return "Edge{" +
+                "distance=" + distance +
+                ", neighbor=" + neighbor.getId() +
+                '}';
+    }
 }
