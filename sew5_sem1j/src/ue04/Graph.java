@@ -37,7 +37,7 @@ public class Graph {
         System.out.println();
     }
 
-    private PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(Node::getDistance));;
+    private PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.getDistance()).thenComparing(n -> n.getId()));;
     private List<Node> nodes = new ArrayList<>();
 
     /**
@@ -61,7 +61,6 @@ public class Graph {
             String line;
             String lettersline = br.readLine();
             int row = 0;
-
             String[] letters = lettersline.split(";");
             while ((line = br.readLine()) != null ){
                 if (row == 0) {
@@ -170,7 +169,7 @@ public class Graph {
         pq.add(startNode);
 
         while (!pq.isEmpty()) {
-            Node currentNode = pq.poll(); //first element
+            Node currentNode = pq.poll(); //first element removed
             if (currentNode.isVisited()) {
                 continue;
             }

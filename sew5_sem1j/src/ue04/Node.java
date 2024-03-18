@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
-public class Node implements Comparable<Node> {
+public class Node {
      private String id;
      private ArrayList<Edge> edges = new ArrayList<>();
      private int distance = Integer.MAX_VALUE;
@@ -23,15 +23,7 @@ public class Node implements Comparable<Node> {
         this.id = id;
     }
 
-    /***
-     *  Comparable
-     * @param o the object to be compared.
-     * @return wer die kleine distance hat
-     */
-    @Override
-    public int compareTo(Node o) {
-        return this.distance == o.distance ? this.id.compareTo(o.id) : Integer.compare(this.distance, o.distance);
-    }
+
 
     @Override
     public String toString() {
