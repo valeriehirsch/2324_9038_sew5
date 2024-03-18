@@ -101,6 +101,26 @@ public class Graph {
 
     public void calcWithDijkstra (String startNodeId){
 
+        for (Node node : nodes) {
+            node.init();
+        }
+
+        Node startNode = findNodeById(startNodeId);
+        if (startNode == null) {
+            throw new IllegalArgumentException("Start node " + startNodeId + " nicht im Graph");
+        }
+
+        startNode.setStartNode();
+        pq.add(startNode);
+
+        while (!pq.isEmpty()) {
+            Node currentNode = pq.poll(); //first element
+            if (currentNode.isVisited()) {
+                continue;
+            }
+            currentNode.visit(pq);
+        }
+
     }
 
 
