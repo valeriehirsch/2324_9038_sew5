@@ -16,7 +16,7 @@ public class Graph {
      * Konstruktor
      */
     public Graph() {
-        pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.distance).thenComparing(n -> n.id));
+        pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.distance).thenComparing(n -> n.getId()));
         nodes = new ArrayList<>();
     }
 
@@ -31,13 +31,11 @@ public class Graph {
                     continue;
                 }
                 String[] values = line.split(";");
-                Node n = new Node(letters.get(row));
-
+                Node n = findOrCreateNode(values[0]);
                 for (int i = 0; i < values.length; i++) {
-                    int dist = Integer.parseInt(values[i]);
-                    if (dist != 0){
-
-                        //hier dann nodes und edge adden -> dafür fehlen methoden bei node
+                    if (!values[i].isEmpty()) {
+                        int dist = Integer.parseInt(values[i]);
+                        n.addEdge(new Edge(dist, findOrCreateNode(values[0])));
                     }
                 }
                 row++;
@@ -46,6 +44,14 @@ public class Graph {
         catch (IOException e){
             throw new IOException(e.getMessage());
         }
+    }
+
+    private Node findOrCreateNode(String id) {
+        Optional<Node> node = nodes.stream().filter(a -> Objects.equals(a.getId(), id)).findFirst();
+        if (node.isPresent()) return node.get();
+        Node newNode = new Node(id);
+        nodes.add(newNode);
+        return newNode;
     }
 
     public String getAllPaths(){

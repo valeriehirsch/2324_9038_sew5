@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 public class Node implements Comparable<Node> {
-     String id;
+     private String id;
      TreeSet<Edge> edges;
      int distance;
      Node previous;
@@ -41,6 +41,10 @@ public class Node implements Comparable<Node> {
                 ", previous=" + previous +
                 ", isVisited=" + isVisited +
                 '}';
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getPath(){
