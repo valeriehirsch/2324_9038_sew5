@@ -2,8 +2,8 @@ package ue04;
 
 public class Edge{
 
-     int distance;
-     Node neighbor;
+     private int distance;
+     private Node neighbor;
 
     /***
      * Konstruktor
@@ -15,4 +15,11 @@ public class Edge{
         this.neighbor = neighbor;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    public Node getNeighbor() {
+        return neighbor;
+    }
 }

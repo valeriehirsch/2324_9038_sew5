@@ -1,13 +1,15 @@
 package ue04;
 
+import com.sun.source.tree.Tree;
+
 import java.util.Comparator;
 import java.util.TreeSet;
 
 public class Node implements Comparable<Node> {
      private String id;
-     private TreeSet<Edge> edges;
-     private int distance;
-     private Node previous;
+     private TreeSet<Edge> edges = new TreeSet<>();
+     private int distance = Integer.MAX_VALUE;
+     private Node previous = null;
      private boolean isVisited = false;
 
     /***
@@ -16,10 +18,6 @@ public class Node implements Comparable<Node> {
      */
     public Node(String id) {
         this.id = id;
-        edges = new TreeSet<>(Comparator.comparingInt((Edge e) -> e.neighbor.distance).thenComparing(e -> e.neighbor.id));
-        distance = Integer.MAX_VALUE;
-        previous = null;
-        isVisited = false;
     }
 
     /***
@@ -72,10 +70,25 @@ public class Node implements Comparable<Node> {
     }
      */
 
+
     public void addEdge(Edge edgeToAdd){
         edges.add(edgeToAdd);
     }
 
+    /***
+     * checkt ob erster punkt (start node)
+     * @return
+     */
+    public boolean isFirst() {
+        return previous == null && distance == 0;
+    }
 
-
+    public void setStartNode() {
+        distance = 0;
+    }
+    public void reset() {
+        isVisited = false;
+        previous = null;
+        distance = Integer.MAX_VALUE;
+    }
 }
