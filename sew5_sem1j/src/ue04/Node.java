@@ -6,7 +6,7 @@ import java.util.TreeSet;
 public class Node implements Comparable<Node> {
      private String id;
      TreeSet<Edge> edges;
-     int distance;
+     private int distance;
      Node previous;
      boolean isVisited;
 
@@ -47,6 +47,12 @@ public class Node implements Comparable<Node> {
         return id;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    /*
+    macht keinen sinn da man durch alle nodes (bzw deren prev.) durchiterieren muss.
     public String getPath(){
         if (distance == Integer.MAX_VALUE){
             return "no path available for " + id;
@@ -56,6 +62,7 @@ public class Node implements Comparable<Node> {
         }
 
     }
+     */
 
     public void addEdge(Edge edgeToAdd){
         edges.add(edgeToAdd);

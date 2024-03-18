@@ -16,7 +16,7 @@ public class Graph {
      * Konstruktor
      */
     public Graph() {
-        pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.distance).thenComparing(n -> n.getId()));
+        pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.getDistance()).thenComparing(n -> n.getId()));
         nodes = new ArrayList<>();
     }
 
@@ -54,8 +54,26 @@ public class Graph {
         return newNode;
     }
 
+    private Node findNodeById(String id) {
+        for (Node node : nodes) {
+            if (node.getId().equals(id)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+
     public String getAllPaths(){
      return "";
+    }
+
+    public String getPath(Node n){
+        StringBuilder pathBuilder = new StringBuilder();
+        for (Node cur = n; cur.previous != null; cur = cur.previous) {
+            pathBuilder.insert(0, "--(" + cur.getDistance() + ")-> " + cur.getId() + " ");
+        }
+        return pathBuilder.toString();
     }
 
     public void calcWithDijkstra (String startNodeId){
