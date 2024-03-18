@@ -103,7 +103,16 @@ public class Node implements Comparable<Node> {
     }
 
     public void visit(PriorityQueue priorityQueue){
-
+        isVisited = true;
+        for (Edge edge : edges) {
+            Node neighbour = edge.getNeighbor();
+            int newDist = distance + edge.getDistance();
+            if (newDist < neighbour.distance) {
+                neighbour.distance = newDist;
+                neighbour.previous = this;
+                priorityQueue.add(edge.getNeighbor());
+            }
+        }
     }
 
 }
