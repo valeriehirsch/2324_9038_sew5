@@ -8,7 +8,6 @@ werte = [ -PI + (PI/CNT * 2) * i for i in range(CNT)]
 C = [math.cos(x) for x in werte]
 S = [math.sin(x) for x in werte]
 
-print(f"macht er die {len(werte)} und diese {len(C)}")
 
 plt.figure(figsize=(10,6), dpi=80)
 plt.plot(werte, C, color="purple", linewidth=2.5, linestyle="-", label="Cosinus")
