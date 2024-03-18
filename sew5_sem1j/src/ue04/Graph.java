@@ -59,16 +59,21 @@ public class Graph {
     public void readGraphFromAdjacencyMatrixFile (Path file) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(file.toFile()))){
             String line;
+            String lettersline = br.readLine();
             int row = 0;
-            List<String> letters = new ArrayList<>();
+
+            String[] letters = lettersline.split(";");
             while ((line = br.readLine()) != null ){
+                if (row == 0) {
+                    row++;
+                    continue;
+                }
                 String[] values = line.split(";");
                 Node n = findOrCreateNode(values[0]);
                 for (int i = 1; i < values.length; i++) {
-                    if (row == 0) continue;
                     if (!values[i].isEmpty()) {
                         int dist = Integer.parseInt(values[i]);
-                        n.addEdge(new Edge(dist, findOrCreateNode(values[0])));
+                        n.addEdge(new Edge(dist, findOrCreateNode(letters[i])));
                     }
                 }
                 row++;
@@ -108,7 +113,29 @@ public class Graph {
 
 
     public String getAllPaths(){
-     return "";
+        Node startNode = nodes.stream().filter(Node::isFirst).findFirst().orElse(null);
+        StringBuilder pathBuilder = new StringBuilder();
+        for (Node node : nodes) {
+            if (node == startNode) {
+                pathBuilder.append(node.getId())
+                        .append(": is start node")
+                        .append("\n");
+            }
+            else if (node.getDistance() == Integer.MAX_VALUE) {
+             pathBuilder.append("no path available for ")
+                        .append(node.getId())
+                        .append(" [totalDistance: ?] ")
+                        .append(node.edgetoString())
+                        .append("\n");
+            }
+            else {
+             pathBuilder.append(node.getId())
+                        .append(" ")
+                        .append(getPath(node))
+                        .append("\n");
+            }
+        }
+        return pathBuilder.toString();
     }
 
     /***
@@ -160,16 +187,15 @@ public class Graph {
     public String toString() {
         StringBuilder graphBuilder = new StringBuilder();
         Node startNode = nodes.stream().filter(Node::isFirst).findFirst().orElse(null);
-
         for (Node node : nodes) {
             if (node == startNode){
-                graphBuilder.append(node.getId())
+            graphBuilder.append(node.getId())
                         .append("----> is start node ")
                         .append(node.edgetoString())
                         .append("\n");
             }
             else{
-                graphBuilder.append(node.getId())
+            graphBuilder.append(node.getId())
                         .append(" [totalDistance: ")
                         .append(node.getDistance() != Integer.MAX_VALUE ? node.getDistance() : "?").append("] ")
                         .append(node.edgetoString())
