@@ -125,9 +125,24 @@ public class Graph {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder graphBuilder = new StringBuilder();
         Node startNode = nodes.stream().filter(Node::isFirst).findFirst().orElse(null);
 
-
+        for (Node node : nodes) {
+            if (node == startNode){
+                graphBuilder.append(node.getId())
+                        .append("----> is start node ")
+                        .append(node.edgetoString())
+                        .append("\n");
+            }
+            else{
+                graphBuilder.append(node.getId())
+                        .append(" [totalDistance: ")
+                        .append(node.getDistance() != Integer.MAX_VALUE ? node.getDistance() : "?").append("] ")
+                        .append(node.edgetoString())
+                        .append("\n");
+            }
+        }
+        return graphBuilder.toString();
     }
 }

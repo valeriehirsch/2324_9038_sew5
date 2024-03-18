@@ -86,14 +86,14 @@ public class Node implements Comparable<Node> {
     }
 
     public String edgetoString() {
-        StringBuilder resultBuilder = new StringBuilder();
+        StringBuilder edgeStr = new StringBuilder();
         for (Edge edge : edges) {
-            resultBuilder.append(edge.getNeighbor().getId())
+            edgeStr.append(edge.getNeighbor().getId())
                     .append(":")
                     .append(edge.getDistance())
                     .append(" ");
         }
-        return resultBuilder.toString();
+        return edgeStr.toString();
     }
 
     /***
