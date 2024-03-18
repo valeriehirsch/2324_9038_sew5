@@ -41,6 +41,10 @@ public class Node implements Comparable<Node> {
                 '}';
     }
 
+    /**
+     * getter
+     * @return
+     */
     public String getId() {
         return id;
     }
@@ -57,6 +61,7 @@ public class Node implements Comparable<Node> {
         return isVisited;
     }
 
+
     /*
     macht keinen sinn da man durch alle nodes (bzw deren prev.) durchiterieren muss.
     public String getPath(){
@@ -71,6 +76,10 @@ public class Node implements Comparable<Node> {
      */
 
 
+    /**
+     * adds edge
+     * @param edgeToAdd
+     */
     public void addEdge(Edge edgeToAdd){
         edges.add(edgeToAdd);
     }
