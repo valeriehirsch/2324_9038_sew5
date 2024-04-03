@@ -111,6 +111,11 @@ public class Node {
         isVisited = true;
         for (Edge edge : edges) {
             Node neighbour = edge.getNeighbor();
+            // cd.changeDistance(neighbour, this, newDist);
+            if (neighbour.distance < Integer.MAX_VALUE) {
+                priorityQueue.remove(neighbour);
+            }
+
             int newDist = distance + edge.getDistance();
             if (newDist < neighbour.distance) {
                 neighbour.distance = newDist;

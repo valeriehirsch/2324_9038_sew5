@@ -3,39 +3,42 @@ package ue04;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.Buffer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 public class Graph {
+
+    //exceptions und junit
+    
     public static void main(String[] args) throws IOException {
         Graph g = new Graph(Path.of("src/ue04/resources/Graph_A-H.csv"));
-//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_a.csv"));
-//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_b.csv"));
-//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_c.csv"));
-//        Graph g = new Graph(Path.of("resources/kaputt_Graph_A-H_d.csv"));
-//        Graph g = new Graph(Path.of("resources/Graph_12_with_names.csv"));
-//        Graph g = new Graph(Path.of("resources/unzusammenhaengend_Graph_A-M.csv"));
+//        Graph g = new Graph(Path.of("src/ue04/resources/kaputt_Graph_A-H_a.csv"));
+//        Graph g = new Graph(Path.of("src/ue04/resources/kaputt_Graph_A-H_b.csv"));
+//        Graph g = new Graph(Path.of("src/ue04/resources/kaputt_Graph_A-H_c.csv"));
+//        Graph g = new Graph(Path.of("src/ue04/resources/kaputt_Graph_A-H_d.csv"));
+//        Graph g = new Graph(Path.of("src/ue04/resources/Graph_12_with_names.csv"));
+//        Graph g = new Graph(Path.of("src/ue04/resources/unzusammenhaengend_Graph_A-M.csv"));
         System.out.println(g);
         System.out.println();
         System.out.println(g.getAllPaths());
         System.out.println();
 
         g.calcWithDijkstra("A");
-//      g.calcWithDijkstra("Adonaäis");
         System.out.println(g);
         System.out.println();
         System.out.println(g.getAllPaths());
         System.out.println();
 
+        System.exit(0);
 
         g.calcWithDijkstra("B");
-//        g.calcWithDijkstra("Barthhal");
         System.out.println(g);
         System.out.println();
         System.out.println(g.getAllPaths());
         System.out.println();
     }
+
 
     private PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt((Node n) -> n.getDistance()).thenComparing(n -> n.getId()));;
     private List<Node> nodes = new ArrayList<>();
@@ -60,16 +63,26 @@ public class Graph {
         try (BufferedReader br = new BufferedReader(new FileReader(file.toFile()))){
             String line;
             String lettersline = br.readLine();
-            int row = 0;
             String[] letters = lettersline.split(";");
+            int row = 1;
+            List<String> lines = Files.readAllLines(file);
+            //matrix not correct
+            if (lines.size() != letters.length) {
+                throw new IllegalArgumentException("The number of rows and columns must be equal.");
+            }
+
             while ((line = br.readLine()) != null ){
-                if (row == 0) {
-                    row++;
-                    continue;
-                }
                 String[] values = line.split(";");
                 Node n = findOrCreateNode(values[0]);
+                //matrix not correct
+                if (letters.length < values.length) {
+                    throw new IllegalArgumentException("The number of rows and columns must be equal!");
+                }
                 for (int i = 1; i < values.length; i++) {
+                    //matrix not correct
+                    if (!(letters[row]).equals(values[0])) {
+                        throw new IllegalArgumentException("The id from the first element of the row '" + values[0] + "' and first column '" + letters[row] + "' are not equal.");
+                    }
                     if (!values[i].isEmpty()) {
                         int dist = Integer.parseInt(values[i]);
                         n.addEdge(new Edge(dist, findOrCreateNode(letters[i])));
@@ -102,12 +115,19 @@ public class Graph {
      * @return gibt einen node wert zurück
      */
     private Node findNodeById(String id) {
+        return nodes.stream()
+                .filter(a -> a.getId().equals(id))
+                .findFirst().orElse(null);
+
+        /*
         for (Node node : nodes) {
             if (node.getId().equals(id)) {
-                return node;
-            }
+                    return node;
+                }
         }
         return null;
+
+        */
     }
 
 
@@ -156,6 +176,11 @@ public class Graph {
      */
     public void calcWithDijkstra (String startNodeId){
 
+        if (startNodeId == null) {
+            throw new IllegalArgumentException("Start node id must not be null.");
+        }
+
+        //nodes.forEach(node -> node.init());
         for (Node node : nodes) {
             node.init();
         }
